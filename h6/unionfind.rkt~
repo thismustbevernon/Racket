@@ -1,0 +1,121 @@
+#lang dssl2
+
+# HW6: Union-Find
+#
+# ** You must work on your own for this assignment. **
+
+# This code depends on graph and binary heap implementations.
+# We have provided you with compiled versions of homework 4 and 5 solutions,
+# which are imported below.
+# Be sure to extract the `hw6-lib` archive is the same directory as this file.
+
+import 'hw6-lib/graph.rkt'
+import 'hw6-lib/binheap.rkt'
+import cons
+
+##############################
+##### PART I: UNION-FIND #####
+##############################
+
+class UnionFind:
+    #### YOUR FIELDS GO HERE ####
+
+    # Creates a new union-find structure having `len` initially-disjoint
+    # sets numbered 0 through `len - 1`.
+    def __init__(self, len: nat?):
+        pass
+
+    # Returns the number of objects in the union-find.
+    def len(self) -> nat?:
+        pass
+
+    # Returns the representative object for any given object.
+    def find(self, o: nat?) -> nat?:
+        pass
+
+    # Unions the sets containing the two given objects.
+    def union(self, o1: nat?, o2: nat?) -> NoneC:
+        pass
+
+    # Returns whether two objects are in the same set.
+    def same_set?(self, o1: nat?, o2: nat?) -> bool?:
+        return self.find(o1) == self.find(o2)
+
+###
+### UNION-FIND TESTING
+###
+
+test 'some unions':
+    let u = UnionFind(10)
+    assert not u.same_set?(0, 1)
+    u.union(0, 1)
+    assert u.same_set?(0, 1)
+    u.union(1, 2)
+    u.union(2, 3)
+    assert u.same_set?(0, 3)
+    assert not u.same_set?(0, 4)
+
+## You need more tests!
+
+#############################################
+###### PART II: KRUSKAL’S MST ALGORITHM #####
+#############################################
+
+# Returns the minimum spanning forest for a given graph, represented as
+# a new graph.
+def kruskal_mst(g: WuGraph?) -> WuGraph?:
+    pass
+
+###
+### KRUSKAL HELPER YOU MAY FIND USEFUL
+###
+
+# _get_all_edges_increasing : WUGraph -> VecC[WEdge]
+# Gets a vector of all the edges in the graph sorted by increasing weight;
+# includes only one (arbitrary) direction for each edge.
+def _get_all_edges_increasing(g: WuGraph?) -> VecC[WEdge?]:
+    let edges = Cons.to_vec(g.get_all_edges())
+    heap_sort(edges, λ x, y: x.w < y.w)
+    edges
+
+###
+### MST TESTING
+###
+
+# Graph equality is useful for MST testing.
+def _same_graph?(g1, g2):
+    if g1.len() != g2.len(): return False
+    for u in range(g1.len()):
+        for v in range(u, g1.len()):
+            if g1.get_edge(u, v) != g2.get_edge(u, v):
+                return False
+    return True
+
+# Here is an example graph:
+
+def _GRAPH0():
+    let g = WuGraph(6)
+    let a = g.set_edge
+    a(0, 1, 5)
+    a(0, 2, 7)
+    a(0, 3, 2)
+    a(1, 4, 9)
+    a(1, 5, 6)
+    a(3, 5, 0)
+    a(3, 4, 1)
+    return g
+
+def _GRAPH0_MST():
+    let g = WuGraph(6)
+    let a = g.set_edge
+    a(0, 1, 5)
+    a(0, 2, 7)
+    a(0, 3, 2)
+    a(3, 5, 0)
+    a(3, 4, 1)
+    return g
+
+test 'graph0 mst':
+    assert _same_graph?(kruskal_mst(_GRAPH0()), _GRAPH0_MST())
+
+### You need more tests than this.
